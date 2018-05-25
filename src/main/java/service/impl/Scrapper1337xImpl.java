@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import domain.entity.Video;
-import service.Scrapper1337xService;
+import service.VideoScrapper;
 
 /**
  * Implementation that shows how exacly the content
@@ -24,8 +24,8 @@ import service.Scrapper1337xService;
  * @since 21-05-2018
  *
  */
-public class Scrapper1337xServiceImpl implements Scrapper1337xService{
-	Logger LOGGER = Logger.getLogger(Scrapper1337xServiceImpl.class.getName());
+public class Scrapper1337xImpl implements VideoScrapper{
+	Logger LOGGER = Logger.getLogger(Scrapper1337xImpl.class.getName());
 	
 	private static final String BASE_URL = "http://1337x.to/";
 	private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"

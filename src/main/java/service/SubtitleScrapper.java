@@ -9,7 +9,7 @@ import domain.entity.Subtitle;
  * @author Victor Ferreira
  * @since 21-05-2018
  */
-public interface ScrapperSubtitleService {
+public interface SubtitleScrapper{
 	
 	/**
 	 * Extract the subtitle from the web

@@ -9,6 +9,6 @@ package service.impl;
  * @since 21-05-2018
  *
  */
-public class ScrapperLegendeiServiceImpl {
+public class LegendeiScrapperImpl {
 
 }

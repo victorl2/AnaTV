@@ -12,7 +12,7 @@ import domain.entity.Video;
  * @author Victor Ferreira
  * @since 13-05-2018
  */
-public interface ScrapperVideoService {
+public interface VideoScrapper {
 
 	/**
 	 * Extract the list of videos from the web
