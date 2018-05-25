@@ -1,6 +1,7 @@
 package service.impl;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -138,6 +139,11 @@ public class Scrapper1337xImpl implements VideoScrapper{
 			.collect(Collectors.toList());
 		
 		return videos.size() > 0 ? Optional.of(videos) : Optional.empty();
+	}
+
+	public Path download(String url) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
