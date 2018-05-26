@@ -1,7 +1,17 @@
 package domain.entity.estructure;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import org.apache.commons.io.IOUtils;
 
 import domain.entity.utils.Torrent;
 import service.Content;
@@ -52,9 +62,32 @@ public class Subtitle implements Content{
 		class SubtitleTorrent extends Torrent{
 			
 			@Override
-			public CompletableFuture<?> download() {
-				return CompletableFuture.completedFuture(this);
+			/**
+			 * Download of default files from web content
+			 */
+			public CompletableFuture<?> download(){
+				URL linkLegenda = null;
+				
+				OutputStream outputStream = null;
+				InputStream in = null;
+				
+				try {
+					linkLegenda = new URL(this.contentLink);
+					
+					HttpURLConnection httpcon = (HttpURLConnection) linkLegenda.openConnection();
+					httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+					in = httpcon.getInputStream();
+					
+					outputStream = new FileOutputStream(this.contentLocation.toFile());
+					IOUtils.copy(in, outputStream);
+					outputStream.close();
+				} catch (IOException e) {
+					return CompletableFuture.completedFuture(false);
+				}
+				
+				return CompletableFuture.completedFuture(true);
 			}
+				
 			
 		}
 		
