@@ -1,9 +1,8 @@
 package service.impl;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -13,7 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import domain.entity.Video;
+import domain.entity.estructure.Video;
 import service.VideoScrapper;
 
 /**
@@ -33,7 +32,7 @@ public class Scrapper1337xImpl implements VideoScrapper{
 			+ " AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.122 Safari/534.30";
 
 	
-	public Optional<List<Video>> getVideos(String videoNameForSearch) {
+	public List<Video> getContent(final String videoNameForSearch) {
 		final String series = BASE_URL + "search/designated+survivor/1/";
 	
 		Document doc;
@@ -46,7 +45,7 @@ public class Scrapper1337xImpl implements VideoScrapper{
 		} catch (IOException e) {
 			LOGGER.log(Level.WARNING, "Não foi possível acessar a página " + BASE_URL);
 			LOGGER.log(Level.WARNING, "Trace:", e);
-			return Optional.empty();
+			return new ArrayList<>();
 		}
 		
 		try {
@@ -55,7 +54,7 @@ public class Scrapper1337xImpl implements VideoScrapper{
 					.select("tr"));	
 		}catch(Exception e) {
 			LOGGER.log(Level.WARNING, "Trace:", e);
-			return Optional.empty();
+			return new ArrayList<>();
 		}
 		
 
@@ -66,7 +65,7 @@ public class Scrapper1337xImpl implements VideoScrapper{
 	 * @param elementList that describes the content of the extract html page
 	 * @return Optional encapsulating a list of <b>Video</b>
 	 */
-	private Optional<List<Video>> getVideosFromElementList(Elements elementList) {
+	private List<Video> getVideosFromElementList(Elements elementList) {
 		final String fullHD = "FullHD";
 		final String hd = "HD";
 		final String standard = "Padrão";
@@ -138,12 +137,8 @@ public class Scrapper1337xImpl implements VideoScrapper{
 		}).filter(video -> video != null)
 			.collect(Collectors.toList());
 		
-		return videos.size() > 0 ? Optional.of(videos) : Optional.empty();
+		return videos.size() > 0 ? videos : new ArrayList<>();
 	}
 
-	public Path download(String url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
