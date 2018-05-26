@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import domain.entity.estructure.Video;
+import domain.entity.structure.Video;
 import service.VideoScrapper;
 
 /**

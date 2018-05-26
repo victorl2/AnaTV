@@ -1,6 +1,6 @@
 package service;
 
-import domain.entity.estructure.Video;
+import domain.entity.structure.Video;
 
 /**
  * Defines how to scrappe videos on the web

@@ -1,4 +1,4 @@
-package domain.entity.estructure;
+package domain.entity.structure;
 
 import java.time.Duration;
 import java.util.Calendar;
@@ -113,9 +113,8 @@ public class Video implements Content{
 		this.torrentUploadDate = torrentUploadDate;
 	}
 
-	@Override
-	public Torrent generateTorrent() {
-		
+	
+	public Torrent generateTorrent() {	
 		//Torrent of the type video
 		class TorrentVideo extends Torrent {
 			public CompletableFuture<?> download() {
@@ -164,5 +163,4 @@ public class Video implements Content{
 		return torrent;
 	}
 
-	
 }

@@ -1,6 +1,6 @@
 package service;
 
-import domain.entity.estructure.Subtitle;
+import domain.entity.structure.Subtitle;
 
 /**
  * Defines how to scrappe subtitles on the web

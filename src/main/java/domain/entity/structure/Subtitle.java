@@ -1,12 +1,10 @@
-package domain.entity.estructure;
+package domain.entity.structure;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -54,10 +52,7 @@ public class Subtitle implements Content{
 		this.urlDownload = urlDownload;
 	}
 
-	@Override
-	public Torrent generateTorrent() {
-		
-		
+	public Torrent generateTorrent() {		
 		//Torrent of the type subtitle
 		class SubtitleTorrent extends Torrent{
 			
