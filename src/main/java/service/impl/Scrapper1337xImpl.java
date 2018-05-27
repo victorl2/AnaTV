@@ -2,6 +2,7 @@ package service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,13 +28,14 @@ import service.VideoScrapper;
 public class Scrapper1337xImpl implements VideoScrapper{
 	Logger LOGGER = Logger.getLogger(Scrapper1337xImpl.class.getName());
 	
-	private static final String BASE_URL = "http://1337x.to/";
+	private static final String BASE_URL = "http://1337x.to";
 	private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8)"
 			+ " AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.122 Safari/534.30";
 
 	
 	public List<Video> getContent(final String videoNameForSearch) {
-		final String series = BASE_URL + "search/designated+survivor/1/";
+		final String series = BASE_URL 
+				+ String.format("/search/%s/1/", videoNameForSearch.toLowerCase().replace(' ', '+'));
 	
 		Document doc;
 		
@@ -46,6 +48,16 @@ public class Scrapper1337xImpl implements VideoScrapper{
 			LOGGER.log(Level.WARNING, "Não foi possível acessar a página " + BASE_URL);
 			LOGGER.log(Level.WARNING, "Trace:", e);
 			return new ArrayList<>();
+		}
+		
+		//Check for invalid search term (no results found)
+		Element element = doc.select(".box-info-detail").first();
+		String errorMsg = "No results were returned. Please refine your search";
+		
+		if(element == null || element.toString().contains(errorMsg)) {
+			LOGGER.log(Level.WARNING, () -> 
+					String.format("Invalid search term, no results found for '%s'", videoNameForSearch));
+			return Arrays.asList();
 		}
 		
 		try {
@@ -104,25 +116,36 @@ public class Scrapper1337xImpl implements VideoScrapper{
 								)
 						);
 				
-				//Definind video size
-				currentVideo.setSize(
-						Long.parseLong(
-								detailedInfo
-								.select("td.size")
-								.text()
-								.substring(0, 
-										detailedInfo
-										.select("td.size")
-										.text()
-										.indexOf("MB")).trim()
-						)
-					);
 				
-				//Video upload date
-	//			currentVideo.setTorrentUploadDate(
-	//					,detailedInfo.select("td.coll-date")
-	//					.text())
-	//			;
+				String size = detailedInfo.select("td.size").text();
+				
+				String MB = "MB";
+				String KB = "KB";
+				String GB = "GB";
+				
+				int sizeEnd = -1;
+				float weight = 1;
+				
+				if(size.contains(MB)) {
+					sizeEnd = size.indexOf(MB);
+				}else if(size.contains(GB)) {
+					weight = 1000;
+					sizeEnd = size.indexOf(GB);
+				}else {
+					weight = 0.001f;
+					sizeEnd = size.indexOf(KB);
+				}
+					 
+				
+				if(size != null && size.length() > 0) {
+					//Definind video size
+					int fileSize = (int) Float.parseFloat(size
+							.substring(0, sizeEnd)
+							.trim());
+					
+					//Converting GB to MB
+					currentVideo.setSize((int)(fileSize * weight));
+				}	
 					
 				//Defining video quality
 				if (content.text().contains("1080")) {

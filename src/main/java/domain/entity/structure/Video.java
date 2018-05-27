@@ -1,7 +1,6 @@
 package domain.entity.structure;
 
 import java.time.Duration;
-import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.inject.Module;
@@ -50,12 +49,7 @@ public class Video implements Content{
 	/**
 	 * Size of the video in MB
 	 */
-	private long size;
-	
-	/**
-	 * Date in wicth the file was updloaded on the web
-	 */
-	private Calendar torrentUploadDate;
+	private int size;
 
 	public String getName() {
 		return name;
@@ -101,23 +95,15 @@ public class Video implements Content{
 		return size;
 	}
 
-	public void setSize(long size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
-
-	public Calendar getTorrentUploadDate() {
-		return torrentUploadDate;
-	}
-
-	public void setTorrentUploadDate(Calendar torrentUploadDate) {
-		this.torrentUploadDate = torrentUploadDate;
-	}
-
 	
 	public Torrent generateTorrent() {	
 		//Torrent of the type video
 		class TorrentVideo extends Torrent {
 			public CompletableFuture<?> download() {
+				
 				Config config = new Config() {
 					@Override
 					public int getNumOfHashingThreads() {
@@ -136,7 +122,10 @@ public class Video implements Content{
 				config.setMaxConcurrentlyActivePeerConnectionsPerTorrent(500);
 				config.setMaxPeerConnectionsPerTorrent(1000);
 				config.setMaxPendingConnectionRequests(300);
-				config.setPeerDiscoveryInterval(Duration.ofSeconds(4,2));
+				config.setPeerDiscoveryInterval(Duration.ofSeconds(10,1));
+				config.setNumberOfPeersToRequestFromTracker(120);
+				config.setMaxIOQueueSize(12000);
+				
 
 				// create file system based backend for torrent data
 				Storage storage = new FileSystemStorage(this.contentLocation);
@@ -154,13 +143,26 @@ public class Video implements Content{
 						.stopWhenDownloaded()
 						.build();
 				
-				return client.startAsync();
+				return client.startAsync(state -> {
+					if(state.getPiecesRemaining() == 0) {
+						client.stop();
+					}
+				}, 1000).exceptionally(e -> {
+					client.stop();
+					return null;
+				});
 			}
 		}
 		
 		TorrentVideo torrent = new TorrentVideo();
 		torrent.defineUrl(this.magnetLink);
 		return torrent;
+	}
+
+	@Override
+	public String toString() {
+		return "Video [" + (name != null ? "name=" + name + ", " : "")
+				+ (quality != null ? "quality=" + quality + ", " : "") + "size=" + size + "]";
 	}
 
 }
