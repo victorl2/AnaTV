@@ -8,6 +8,12 @@ import java.util.logging.Logger;
 
 import com.google.common.io.Files;
 
+/**
+ * Torrent encapsulation for the content
+ * that can be downloaded
+ * @author Victor Ferreira
+ * @since 27-05-2018
+ */
 public abstract class Torrent{
 	protected final Logger LOGGER = Logger.getLogger(Torrent.class.getName());
 	
