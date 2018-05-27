@@ -34,25 +34,13 @@ public abstract class Torrent {
 	protected String contentLink;
 
 	/**
-	 * Define from what url that holds the torrent content
-	 * 
-	 * @param contentLink
-	 *            that contains the torrent content
-	 * @return the Torrent object itself
-	 */
-	public Torrent defineUrl(String contentLink) {
-		this.contentLink = contentLink;
-		return this;
-	}
-
-	/**
 	 * Define where on disk the torrent file should be saved
 	 * 
 	 * @param path
 	 *            on disk to save the torrent
 	 * @return the Torrent object itself
 	 */
-	public Torrent defineOutputLocation(final String path) {
+	final public Torrent defineOutputLocation(final String path) {
 		this.contentLocation = Paths.get(path);
 		return this;
 	}

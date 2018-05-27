@@ -2,6 +2,14 @@ package service;
 
 import domain.entity.utils.Torrent;
 
+/**
+ * Defines the basic functionality
+ * that any content must have
+ * 
+ * @author Victor Ferreira
+ * @param <T>
+ * @since 26-05-2018
+ */
 public interface Content {
 	
 	/**

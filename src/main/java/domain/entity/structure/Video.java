@@ -100,8 +100,16 @@ public class Video implements Content{
 	}
 	
 	public Torrent generateTorrent() {	
+		
+		Video currentVideo = this;
+		
 		//Torrent of the type video
 		class TorrentVideo extends Torrent {
+			
+			TorrentVideo() {
+				this.contentLink = currentVideo.magnetLink;
+			}
+			
 			public CompletableFuture<?> download() {
 				
 				Config config = new Config() {
@@ -154,9 +162,7 @@ public class Video implements Content{
 			}
 		}
 		
-		TorrentVideo torrent = new TorrentVideo();
-		torrent.defineUrl(this.magnetLink);
-		return torrent;
+		return new TorrentVideo();
 	}
 
 	@Override

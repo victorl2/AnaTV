@@ -51,25 +51,34 @@ public class Subtitle implements Content{
 	public void setUrlDownload(String urlDownload) {
 		this.urlDownload = urlDownload;
 	}
-
-	public Torrent generateTorrent() {		
+	
+	/**
+	 * Generate the torrent for a subtitle
+	 */
+	public Torrent generateTorrent() {	
+		
+		Subtitle sub = this;
 		//Torrent of the type subtitle
 		class SubtitleTorrent extends Torrent{
+			
+			SubtitleTorrent(){
+				this.contentLink = sub.urlDownload;
+			}
 			
 			@Override
 			/**
 			 * Download of default files from web content
 			 */
 			public CompletableFuture<?> download(){
-				URL linkLegenda = null;
+				URL subtitleURL = null;
 				
 				OutputStream outputStream = null;
 				InputStream in = null;
 				
 				try {
-					linkLegenda = new URL(this.contentLink);
+					subtitleURL = new URL(this.contentLink);
 					
-					HttpURLConnection httpcon = (HttpURLConnection) linkLegenda.openConnection();
+					HttpURLConnection httpcon = (HttpURLConnection) subtitleURL.openConnection();
 					httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 					in = httpcon.getInputStream();
 					
@@ -86,9 +95,7 @@ public class Subtitle implements Content{
 			
 		}
 		
-		SubtitleTorrent torrent = new SubtitleTorrent();
-		torrent.defineUrl(this.urlDownload);
-		return torrent;
+		return new SubtitleTorrent();
 	}
 	
 }
