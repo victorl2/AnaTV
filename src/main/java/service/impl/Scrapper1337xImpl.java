@@ -105,17 +105,13 @@ public class Scrapper1337xImpl implements VideoScrapper{
 					return null;
 				}
 				
-				//Video name
 				currentVideo.setName(content.text());
-				
-				//Amount of seeds
 				currentVideo.setSeeds(
 						Integer.parseInt(detailedInfo.
 								select("td.seeds")
 								.text()
 								)
 						);
-				
 				
 				String size = detailedInfo.select("td.size").text();
 				
@@ -143,7 +139,7 @@ public class Scrapper1337xImpl implements VideoScrapper{
 							.substring(0, sizeEnd)
 							.trim());
 					
-					//Converting GB to MB
+					//Normalizing value to MB
 					currentVideo.setSize((int)(fileSize * weight));
 				}	
 					
